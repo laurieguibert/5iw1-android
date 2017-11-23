@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import java.net.URL;
 
 import apackage.thetvdb.HomeActivity;
 import apackage.thetvdb.MainActivity;
+import apackage.thetvdb.R;
 
 import static android.content.ContentValues.TAG;
 
@@ -30,10 +32,12 @@ public class LoginService extends AsyncTask<String, String, String> {
     private final String url = "https://api.thetvdb.com/login";
     private Activity activity;
     private SharedPreferences sharedPreferences;
+    private TextView errorMessage;
 
-    public LoginService(Activity activity, SharedPreferences sharedPreferences) {
+    public LoginService(Activity activity, SharedPreferences sharedPreferences, TextView errorMessage) {
         this.activity = activity;
         this.sharedPreferences = sharedPreferences;
+        this.errorMessage = errorMessage;
     }
 
     @Override
@@ -103,22 +107,25 @@ public class LoginService extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        Log.d("DEV", s);
-
         String token = "";
 
         try {
-            JSONObject data = new JSONObject(s);
-            token = data.getString("token");
 
-            if(token != null) {
-                Log.d("DEV", "Token : " + token);
+            if(s != null) {
+                JSONObject data = new JSONObject(s);
+                token = data.getString("token");
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("token", token);
-                editor.commit();
+                if(token != null) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("token", token);
+                    editor.commit();
+                    activity.startActivity(new Intent(activity, HomeActivity.class));
+                }else{
+                    this.errorMessage.setText(R.string.login_error);
+                }
 
-                activity.startActivity(new Intent(activity, HomeActivity.class));
+            }else{
+                this.errorMessage.setText(R.string.login_error);
             }
 
         } catch(JSONException e) {
