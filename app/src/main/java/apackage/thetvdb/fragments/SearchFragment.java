@@ -58,6 +58,8 @@ public class SearchFragment extends ListFragment {
                     mSeriesAdapter = new TvdbItemAdapter<>(getActivity(), imageLoader, R.layout.tvdb_item, R.id.title, R.id.image);
                     setListAdapter(mSeriesAdapter);
 
+                    // TODO ask language
+
                     TvdbApi tvdbApi = new TvdbApi(App.TVDB_API_KEY, "en", app.getRequestQueue());
                     tvdbApi.searchSeries(search, mSeriesResponseListener, mErrorListener);
 
