@@ -1,6 +1,7 @@
 package apackage.thetvdb.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import java.util.Collection;
 
 import apackage.thetvdb.App;
 import apackage.thetvdb.R;
+import apackage.thetvdb.SeriesActivity;
 
 
 public class SearchFragment extends ListFragment {
@@ -84,4 +87,13 @@ public class SearchFragment extends ListFragment {
         }
 
     };
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Series series = mSeriesAdapter.getItem(position);
+        Intent seasonList = new Intent(getActivity(), SeriesActivity.class);
+        seasonList.putExtra(SeriesActivity.EXTRA_SERIES, series);
+        startActivity(seasonList);
+    }
 }
