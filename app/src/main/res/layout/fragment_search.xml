@@ -49,6 +49,7 @@
         </LinearLayout>
 
 
+
         <Button
             android:id="@+id/but_right"
             android:layout_width="30dp"

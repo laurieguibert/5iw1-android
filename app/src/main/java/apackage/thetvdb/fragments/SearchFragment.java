@@ -35,6 +35,7 @@ import apackage.thetvdb.SeriesActivity;
 public class SearchFragment extends ListFragment {
 
     private TvdbItemAdapter<Series> mSeriesAdapter;
+    public static final String EXTRA_SERIES = "series";
 
     @Nullable
     @Override
@@ -92,8 +93,8 @@ public class SearchFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Series series = mSeriesAdapter.getItem(position);
-        Intent seasonList = new Intent(getActivity(), SeriesActivity.class);
-        seasonList.putExtra(SeriesActivity.EXTRA_SERIES, series);
-        startActivity(seasonList);
+        Intent seriesActivity = new Intent(getActivity(), SeriesActivity.class);
+        seriesActivity.putExtra(EXTRA_SERIES, series);
+        startActivity(seriesActivity);
     }
 }

@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_framelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="apackage.thetvdb.fragments.HomeFragment">
@@ -8,5 +9,6 @@
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </FrameLayout>
