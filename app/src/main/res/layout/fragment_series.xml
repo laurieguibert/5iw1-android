@@ -52,6 +52,18 @@
                 android:text="@string/button_actors"
                 android:textColor="@color/white" />
 
+            <Button
+                android:id="@+id/show_seasons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/button_seasons"
+                android:textColor="@color/white"
+                android:layout_margin="10dp" />
+
         </LinearLayout>
 
     </ScrollView>

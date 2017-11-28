@@ -37,7 +37,7 @@ public class SeriesFragment extends Fragment {
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView description = (TextView) view.findViewById(R.id.description);
         Button showActors = (Button) view.findViewById(R.id.show_actors);
-
+        Button showSeasons = (Button) view.findViewById(R.id.show_seasons);
 
         Intent intent = getActivity().getIntent();
         Series series = intent.getParcelableExtra(EXTRA_SERIES);
@@ -52,6 +52,16 @@ public class SeriesFragment extends Fragment {
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new ActorsFragment())
+                        .addToBackStack("tag")
+                        .commit();
+            }
+        });
+
+        showSeasons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new SeasonsFragment())
                         .addToBackStack("tag")
                         .commit();
             }
