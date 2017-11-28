@@ -4,36 +4,56 @@
     android:layout_height="match_parent"
     tools:context="apackage.thetvdb.fragments.SeriesFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:scaleType="fitXY"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="8dp"
-            android:paddingTop="10dp"
-            android:text="Stranger things"
-            android:textColor="@color/colorPrimary"
-            android:textSize="23dp" />
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:text="TextView" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:scaleType="fitXY"
+                />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="10dp"
+                android:text="Stranger things"
+                android:textColor="@color/colorPrimary"
+                android:textSize="23dp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="TextView" />
+
+
+            <Button
+                android:id="@+id/show_actors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/button_actors"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>

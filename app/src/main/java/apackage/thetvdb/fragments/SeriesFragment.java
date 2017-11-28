@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class SeriesFragment extends Fragment {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView description = (TextView) view.findViewById(R.id.description);
+        Button showActors = (Button) view.findViewById(R.id.show_actors);
 
 
         Intent intent = getActivity().getIntent();
@@ -44,5 +46,15 @@ public class SeriesFragment extends Fragment {
         new DownloadImageTask(imageView).execute(series.getImageUrl().replace("http", "https"));
         title.setText(series.getTitleText());
         description.setText(series.getDescText());
+
+        showActors.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ActorsFragment())
+                        .addToBackStack("tag")
+                        .commit();
+            }
+        });
     }
 }

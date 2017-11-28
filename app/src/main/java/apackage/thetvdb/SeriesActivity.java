@@ -15,8 +15,18 @@ public class SeriesActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SeriesFragment())
+                .addToBackStack("tag")
                 .commit();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
     }
 
 }
