@@ -1,8 +1,15 @@
 package apackage.thetvdb.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,9 +20,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import apackage.thetvdb.R;
+import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.ServiceResponse;
 import apackage.thetvdb.service.ISerieService;
@@ -24,9 +33,12 @@ import apackage.thetvdb.service.SerieService;
 import apackage.thetvdb.utils.ApiUtils;
 
 
-public class SearchFragment extends ListFragment {
+public class SearchFragment extends Fragment {
 
     public ISerieService serieService;
+    private SerieListAdapter serieListAdapter;
+    private RecyclerView recyclerView;
+    private List<Serie> serieList = new ArrayList<>();
 
     public ISerieService getSerieService() {
         if(serieService == null) {
@@ -48,7 +60,29 @@ public class SearchFragment extends ListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        serieListAdapter = new SerieListAdapter(serieList, getContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(serieListAdapter);
+
+
         final EditText edit_txt = (EditText) view.findViewById(R.id.search_bar);
+
+        /* Change drawable color */
+
+        int tintColor = ContextCompat.getColor(view.getContext(), R.color.orange);
+
+        Drawable drawable = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_search_black_24dp);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable.mutate(), tintColor);
+
+        drawable.setBounds( 0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+        edit_txt.setCompoundDrawables(drawable, null, null, null);
+
+
 
         edit_txt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -62,8 +96,10 @@ public class SearchFragment extends ListFragment {
                         public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
                             List<Serie> series = serviceResponse.getData();
                             for(Serie serie : series) {
-                                Log.e("DEV", "NAME : " + serie.getSeriesName());
+                                serieList.add(serie);
                             }
+
+                            serieListAdapter.notifyDataSetChanged();
                         }
                     });
 
@@ -74,8 +110,4 @@ public class SearchFragment extends ListFragment {
         });
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-
-    }
 }
