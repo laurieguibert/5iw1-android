@@ -1,11 +1,7 @@
 package apackage.thetvdb.fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,26 +12,30 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.sburba.tvdbapi.TvdbApi;
-import com.sburba.tvdbapi.TvdbItemAdapter;
-import com.sburba.tvdbapi.model.Series;
+import java.util.List;
 
-import java.util.Collection;
-
-import apackage.thetvdb.App;
 import apackage.thetvdb.R;
-import apackage.thetvdb.SeriesActivity;
+import apackage.thetvdb.entity.Serie;
+import apackage.thetvdb.entity.ServiceResponse;
+import apackage.thetvdb.service.ISerieService;
+import apackage.thetvdb.service.ResponseListener;
+import apackage.thetvdb.service.SerieService;
+import apackage.thetvdb.utils.ApiUtils;
 
 
 public class SearchFragment extends ListFragment {
 
-    private TvdbItemAdapter<Series> mSeriesAdapter;
-    public static final String EXTRA_SERIES = "series";
+    public ISerieService serieService;
+
+    public ISerieService getSerieService() {
+        if(serieService == null) {
+            serieService = new SerieService();
+        }
+
+        return serieService;
+    }
+
 
     @Nullable
     @Override
@@ -57,15 +57,15 @@ public class SearchFragment extends ListFragment {
                     String search = edit_txt.getText().toString();
 
 
-                    App app = App.getInstance(getActivity());
-                    ImageLoader imageLoader = app.getImageLoader();
-                    mSeriesAdapter = new TvdbItemAdapter<>(getActivity(), imageLoader, R.layout.tvdb_item, R.id.title, R.id.image);
-                    setListAdapter(mSeriesAdapter);
-
-                    // TODO ask language
-
-                    TvdbApi tvdbApi = new TvdbApi(App.TVDB_API_KEY, "en", app.getRequestQueue());
-                    tvdbApi.searchSeries(search, mSeriesResponseListener, mErrorListener);
+                    getSerieService().list(ApiUtils.getHeaders(), search, new ResponseListener<List<Serie>>() {
+                        @Override
+                        public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
+                            List<Serie> series = serviceResponse.getData();
+                            for(Serie serie : series) {
+                                Log.e("DEV", "NAME : " + serie.getSeriesName());
+                            }
+                        }
+                    });
 
 
                 }
@@ -74,31 +74,8 @@ public class SearchFragment extends ListFragment {
         });
     }
 
-    private Response.Listener<Collection<Series>> mSeriesResponseListener = new Response.Listener<Collection<Series>>() {
-        @Override
-        public void onResponse(Collection<Series> series) {
-            for (Series serie : series) {
-                if(serie.getImageUrl() != null) {
-                    mSeriesAdapter.add(serie);
-                }
-            }
-        }
-    };
-
-    private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError volleyError) {
-            Toast.makeText(getActivity(), "Oh noes! Something has gone awry.", Toast.LENGTH_SHORT).show();
-        }
-
-    };
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Series series = mSeriesAdapter.getItem(position);
-        Intent seriesActivity = new Intent(getActivity(), SeriesActivity.class);
-        seriesActivity.putExtra(EXTRA_SERIES, series);
-        startActivity(seriesActivity);
+
     }
 }
