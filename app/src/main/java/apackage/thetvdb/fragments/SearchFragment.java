@@ -77,7 +77,11 @@ public class SearchFragment extends ListFragment {
     private Response.Listener<Collection<Series>> mSeriesResponseListener = new Response.Listener<Collection<Series>>() {
         @Override
         public void onResponse(Collection<Series> series) {
-            mSeriesAdapter.addAll(series);
+            for (Series serie : series) {
+                if(serie.getImageUrl() != null) {
+                    mSeriesAdapter.add(serie);
+                }
+            }
         }
     };
 

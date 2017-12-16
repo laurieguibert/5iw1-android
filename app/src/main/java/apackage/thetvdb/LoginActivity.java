@@ -12,12 +12,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import apackage.thetvdb.services.LoginService;
+import apackage.thetvdb.service.LoginService;
 
 
 public class LoginActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package apackage.thetvdb.services;
+package apackage.thetvdb.service;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import apackage.thetvdb.HomeActivity;
-import apackage.thetvdb.MainActivity;
 import apackage.thetvdb.R;
 
 import static android.content.ContentValues.TAG;

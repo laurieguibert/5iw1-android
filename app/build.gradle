@@ -28,7 +28,14 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.sburba:tvdbapi:1.0.0'
-    compile 'com.mcxiaoke.volley:library:1.0.11'
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    // JSON Parsing
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    // recyclerview
+    implementation 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     testCompile 'junit:junit:4.12'
+
 }
