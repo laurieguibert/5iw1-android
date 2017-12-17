@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="apackage.thetvdb.SerieActivity">
+    tools:context="apackage.thetvdb.SerieActivity"
+    android:orientation="vertical"
+    android:background="@color/black">
+    
+    <ImageView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:scaleType="fitXY"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/series_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serie title"
+        android:fontFamily="@font/falling_sky"
+        android:textColor="@color/orange"
+        android:textSize="40dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serie title"
+        android:fontFamily="@font/falling_sky"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="5dp"/>
+
+    
+</LinearLayout>
