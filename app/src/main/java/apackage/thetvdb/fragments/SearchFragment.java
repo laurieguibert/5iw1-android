@@ -1,5 +1,6 @@
 package apackage.thetvdb.fragments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import apackage.thetvdb.R;
+import apackage.thetvdb.SerieActivity;
 import apackage.thetvdb.adapter.IRecyclerViewClickListener;
 import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Serie;
@@ -38,6 +40,7 @@ public class SearchFragment extends Fragment {
     private SerieListAdapter serieListAdapter;
     private RecyclerView recyclerView;
     private List<Serie> serieList = new ArrayList<>();
+    private final static String SERIE_KEY = "serie";
 
     public ISerieService getSerieService() {
         if(serieService == null) {
@@ -64,6 +67,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClickListener(int position) {
                 // TODO new intent to serieActivity
+                Intent intent = new Intent(getActivity(), SerieActivity.class);
+                intent.putExtra(SERIE_KEY, serieList.get(position));
+                startActivity(intent);
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
