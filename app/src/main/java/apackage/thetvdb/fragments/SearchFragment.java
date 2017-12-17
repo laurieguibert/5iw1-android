@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,13 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import apackage.thetvdb.R;
+import apackage.thetvdb.adapter.IRecyclerViewClickListener;
 import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.ServiceResponse;
@@ -61,7 +60,12 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        serieListAdapter = new SerieListAdapter(serieList, getContext());
+        serieListAdapter = new SerieListAdapter(serieList, getContext(), new IRecyclerViewClickListener() {
+            @Override
+            public void onClickListener(int position) {
+                // TODO new intent to serieActivity
+            }
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -109,5 +113,4 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
 }
