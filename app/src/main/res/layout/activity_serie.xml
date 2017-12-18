@@ -44,5 +44,21 @@
         android:paddingTop="10dp"
         android:paddingLeft="5dp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/actor_title"
+        android:fontFamily="@font/falling_sky"
+        android:textColor="@color/orange"
+        android:textSize="30dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="5dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
     
 </LinearLayout>

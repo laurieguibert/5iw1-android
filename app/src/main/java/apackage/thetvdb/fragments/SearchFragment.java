@@ -66,7 +66,6 @@ public class SearchFragment extends Fragment {
         serieListAdapter = new SerieListAdapter(serieList, getContext(), new IRecyclerViewClickListener() {
             @Override
             public void onClickListener(int position) {
-                // TODO new intent to serieActivity
                 Intent intent = new Intent(getActivity(), SerieActivity.class);
                 intent.putExtra(SERIE_KEY, serieList.get(position));
                 startActivity(intent);
