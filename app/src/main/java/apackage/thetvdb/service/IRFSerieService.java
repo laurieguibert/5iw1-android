@@ -16,4 +16,7 @@ public interface IRFSerieService {
 
     @GET("/search/series")
     Call<SerieList> getSerie(@HeaderMap Map<String, String> map, @Query("name") String name);
+
 }
+
+

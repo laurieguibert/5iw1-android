@@ -17,6 +17,7 @@ public class SerieActivity extends AppCompatActivity {
 
     private TextView seriesName;
     private TextView overview;
+    private TextView date;
     private ImageView banner;
 
     @Override
@@ -30,10 +31,18 @@ public class SerieActivity extends AppCompatActivity {
         seriesName = (TextView) findViewById(R.id.series_name);
         overview = (TextView) findViewById(R.id.overview);
         banner = (ImageView) findViewById(R.id.banner);
+        date = (TextView) findViewById(R.id.date);
 
         seriesName.setText(serie.getSeriesName());
         overview.setText(serie.getOverview());
-        Picasso.with(this).load("https://www.thetvdb.com/banners/_cache/" + serie.getBanner()).into(banner);
+        date.setText(serie.getFirstAired());
+
+
+        if(serie.getBanner().length() == 0) {
+            banner.setImageResource(R.drawable.default_image);
+        }else{
+            Picasso.with(this).load("https://www.thetvdb.com/banners/_cache/" + serie.getBanner()).into(banner);
+        }
 
     }
 }
