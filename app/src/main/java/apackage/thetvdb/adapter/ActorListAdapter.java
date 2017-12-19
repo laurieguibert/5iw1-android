@@ -2,7 +2,6 @@ package apackage.thetvdb.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import apackage.thetvdb.R;
 import apackage.thetvdb.entity.Actor;
-import apackage.thetvdb.entity.Serie;
 
 /**
  * Created by gianniazizi on 16/12/2017.
@@ -30,6 +28,7 @@ public class ActorListAdapter extends RecyclerView.Adapter<ActorListAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder implements RecyclerView.OnClickListener {
         public TextView name;
         public ImageView image;
+        public TextView role;
 
         private IRecyclerViewClickListener iRecyclerViewClickListener;
 
@@ -37,6 +36,7 @@ public class ActorListAdapter extends RecyclerView.Adapter<ActorListAdapter.MyVi
             super(view);
             name = (TextView) view.findViewById(R.id.name);
             image = (ImageView) view.findViewById(R.id.image);
+            role = (TextView) view.findViewById(R.id.role);
             this.iRecyclerViewClickListener = iRecyclerViewClickListener;
             view.setOnClickListener(this);
         }
@@ -66,7 +66,7 @@ public class ActorListAdapter extends RecyclerView.Adapter<ActorListAdapter.MyVi
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Actor actor = actorList.get(position);
         holder.name.setText(actor.getName());
-
+        holder.role.setText(actor.getRole());
 
         if(actor.getImage().length() == 0) {
             holder.image.setImageResource(R.drawable.default_image);

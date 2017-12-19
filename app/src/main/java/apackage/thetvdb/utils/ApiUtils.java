@@ -13,7 +13,7 @@ import apackage.thetvdb.service.IRFSerieService;
 public class ApiUtils {
     private static final String BASE_URL = "https://api.thetvdb.com";
     private static Map<String, String> headers = null;
-    private static String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTM2MDY1NzgsImlkIjoiRVNHSSIsIm9yaWdfaWF0IjoxNTEzNTIwMTc4fQ.UpuWO6d09CwRRzfjEHa6dB1rSrVAlqm1QEO9nXi0zpL0UzP0-m0ayOEfWQ-AmHBpKzUbsDqGuVP8gYI2D07xMcO7SS-S7CAgIFh9YbO3gStd3UTOcjSmVmn2gy3HqgRvVtD2H-EfJS6Kyynd-BUlQpJmT_dAJKCrhmIcbjYK_saAyXWDiJ_hkEEWPj3J3IWZq-IrfoaZJAdJF2HhbMtLzIA8YPBrTjnd7ekIcLS7-L2D3uL5FzCFZnFmzN3G4UnUB0DYDwWWea3m4sY_r1scd4ifZR-QR8-pzxPI5GN3GANQb7D3ogRHswBBsYaTzBy9y9QjovRrvKJUUXcDOR9yhw";
+    private static String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTM3NTg5ODYsImlkIjoiRVNHSSIsIm9yaWdfaWF0IjoxNTEzNjcyNTg2fQ.f9CHdJt-ah1GSAy0webDfBq6_zKHQhBCrMPMq3nZvAEwKN3cY9ThKpcLl_VqEvAEBjIDGw_-HwgZxH2Iea7vPY--HEmq2MND7HyxJJVvidLotBsZfQlWVHq-y2mvePwUocFTiN4apubVWmyT4NbZzSamfkYB-PJQSQ4ouaNeh_JfDV8F4w_ostVBSF9ndZ6YxfPddAXNASDLzqW8o7VOEg_DR5DUjriSJ7-4f06fpyYFj52_4X3uFiGS24soOn18ZS2GoYYk3UnKHRxFJxErCftAwPKPiZl8GI5G7aNqlZt3IqYgEcpz9JAVw10AVDiIUvnzsRLBa2QU7LmY7YKrjw";
 
     public static IRFSerieService getSerieService() {
         return RetrofitClient.getClient(BASE_URL).create(IRFSerieService.class);
