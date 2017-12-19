@@ -1,11 +1,15 @@
 package apackage.thetvdb.service;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Map;
 
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.ActorList;
 import apackage.thetvdb.entity.Serie;
+import apackage.thetvdb.entity.SerieDetails;
+import apackage.thetvdb.entity.SerieDetailsList;
 import apackage.thetvdb.entity.SerieList;
 import apackage.thetvdb.entity.ServiceResponse;
 import apackage.thetvdb.utils.ApiUtils;
@@ -61,6 +65,23 @@ public class SerieService implements ISerieService {
             @Override
             public void onFailure(Call<ActorList> call, Throwable t) {
 
+            }
+        });
+    }
+
+    @Override
+    public void get(Map<String, String> map, int id, final ResponseListener<SerieDetails> responseListener) {
+        // TODO ici choisir entre API ou local, si API ne pas oublier d'enregistrer en local
+
+        getSerieService().getOne(map, id).enqueue(new Callback<SerieDetailsList>() {
+            @Override
+            public void onResponse(Call<SerieDetailsList> call, Response<SerieDetailsList> response) {
+                SerieDetails serie = response.body().getSerie();
+                responseListener.onSuccess(new ServiceResponse<>(serie));
+            }
+
+            @Override
+            public void onFailure(Call<SerieDetailsList> call, Throwable t) {
             }
         });
     }

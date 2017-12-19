@@ -3,6 +3,7 @@ package apackage.thetvdb.service;
 import java.util.Map;
 
 import apackage.thetvdb.entity.ActorList;
+import apackage.thetvdb.entity.SerieDetailsList;
 import apackage.thetvdb.entity.SerieList;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,6 +22,9 @@ public interface IRFSerieService {
 
     @GET("/series/{id}/actors")
     Call<ActorList> getActors(@HeaderMap Map<String, String> map, @Path("id") int id);
+
+    @GET("/series/{id}")
+    Call<SerieDetailsList> getOne(@HeaderMap Map<String, String> map, @Path("id") int id);
 
 }
 

@@ -20,6 +20,7 @@ import apackage.thetvdb.adapter.IRecyclerViewClickListener;
 import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.Serie;
+import apackage.thetvdb.entity.SerieDetails;
 import apackage.thetvdb.entity.ServiceResponse;
 import apackage.thetvdb.service.ISerieService;
 import apackage.thetvdb.service.ResponseListener;
@@ -39,6 +40,7 @@ public class SerieActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ActorListAdapter actorListAdapter;
     private List<Actor> actorList = new ArrayList<>();
+    private SerieDetails serie;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -54,25 +56,30 @@ public class SerieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_serie);
 
         Intent intent = getIntent();
-        Serie serie = intent.getParcelableExtra(SERIE_KEY);
+        Serie serieRequested = intent.getParcelableExtra(SERIE_KEY);
 
         seriesName = (TextView) findViewById(R.id.series_name);
         overview = (TextView) findViewById(R.id.overview);
         banner = (ImageView) findViewById(R.id.banner);
         date = (TextView) findViewById(R.id.date);
 
-        seriesName.setText(serie.getSeriesName());
-        overview.setText(serie.getOverview());
-        date.setText(serie.getFirstAired());
+
+        loadSerie(serieRequested);
 
 
-        if(serie.getBanner().length() == 0) {
-            banner.setImageResource(R.drawable.default_image);
-        }else{
-            Picasso.with(this).load("https://www.thetvdb.com/banners/_cache/" + serie.getBanner()).into(banner);
-        }
+        /* get serie */
 
-        getSerieService().getActors(ApiUtils.getHeaders(), serie.getId(), new ResponseListener<List<Actor>>() {
+        getSerieService().get(ApiUtils.getHeaders(), serieRequested.getId(), new ResponseListener<SerieDetails>() {
+            @Override
+            public void onSuccess(ServiceResponse<SerieDetails> serviceResponse) {
+                serie = serviceResponse.getData();
+                loadMoreSerie(serie);
+            }
+        });
+
+        /* get actors */
+
+        getSerieService().getActors(ApiUtils.getHeaders(), serieRequested.getId(), new ResponseListener<List<Actor>>() {
             @Override
             public void onSuccess(ServiceResponse<List<Actor>> serviceResponse) {
                 List<Actor> actors = serviceResponse.getData();
@@ -97,5 +104,21 @@ public class SerieActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(actorListAdapter);
 
+    }
+
+
+    private void loadSerie(Serie serie) {
+        seriesName.setText(serie.getSeriesName());
+        overview.setText(serie.getOverview());
+        date.setText(serie.getFirstAired());
+
+        if(serie.getBanner().length() == 0) {
+            banner.setImageResource(R.drawable.default_image);
+        }else{
+            Picasso.with(this).load("https://www.thetvdb.com/banners/_cache/" + serie.getBanner()).into(banner);
+        }
+    }
+
+    private void loadMoreSerie(SerieDetails serie) {
     }
 }

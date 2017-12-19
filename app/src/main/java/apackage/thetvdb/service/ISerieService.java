@@ -5,6 +5,7 @@ import java.util.Map;
 
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.Serie;
+import apackage.thetvdb.entity.SerieDetails;
 import apackage.thetvdb.entity.ServiceResponse;
 
 /**
@@ -14,4 +15,5 @@ import apackage.thetvdb.entity.ServiceResponse;
 public interface ISerieService {
     void list(Map<String, String> map, String search, ResponseListener<List<Serie>> responseListener);
     void getActors(Map<String, String> map, int id, ResponseListener<List<Actor>> responseListener);
+    void get(Map<String, String> map, int id, ResponseListener<SerieDetails> responseListener);
 }
