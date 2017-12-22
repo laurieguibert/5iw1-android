@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryDark"
     tools:context="apackage.thetvdb.LoginActivity">
 
     <TextView
@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
         android:text="@string/title_login"
-        android:textColor="@color/white"
+        android:textColor="@color/orange"
         android:textSize="24sp" />
 
     <EditText
@@ -25,12 +25,12 @@
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/orange"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
         android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/orange" />
 
     <EditText
         android:id="@+id/account_identifier"
@@ -39,12 +39,12 @@
         android:layout_alignStart="@+id/username"
         android:layout_below="@+id/username"
         android:layout_marginTop="33dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/orange"
         android:ems="10"
         android:hint="Account identifier"
         android:inputType="textPersonName"
         android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/orange" />
 
     <Button
         android:id="@+id/submit"
@@ -53,7 +53,8 @@
         android:layout_below="@+id/account_identifier"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="42dp"
-        android:text="@string/title_login_button" />
+        android:text="@string/title_login_button"
+        android:background="@color/orange"/>
 
     <TextView
         android:id="@+id/login_error"
