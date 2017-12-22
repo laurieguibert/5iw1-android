@@ -2,6 +2,7 @@ package apackage.thetvdb.service;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import retrofit2.Response;
 public class SerieService implements ISerieService {
 
     private IRFSerieService serieService;
+    private List<Serie> series = new ArrayList<>();
 
     public IRFSerieService getSerieService() {
         if(serieService == null) {
@@ -40,7 +42,11 @@ public class SerieService implements ISerieService {
         getSerieService().getSerie(map, search).enqueue(new Callback<SerieList>() {
             @Override
             public void onResponse(Call<SerieList> call, Response<SerieList> response) {
-                List<Serie> series = response.body().getSeries();
+                series.clear();
+
+                if(response.body() != null) {
+                    series = response.body().getSeries();
+                }
                 responseListener.onSuccess(new ServiceResponse(series));
             }
 

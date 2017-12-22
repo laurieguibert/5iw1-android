@@ -1,6 +1,8 @@
 package apackage.thetvdb.fragments;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ public class SearchFragment extends Fragment {
     public ISerieService serieService;
     private SerieListAdapter serieListAdapter;
     private RecyclerView recyclerView;
+    private LinearLayout noResult;
     private List<Serie> serieList = new ArrayList<>();
     private final static String SERIE_KEY = "serie";
 
@@ -62,6 +67,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        noResult = (LinearLayout) view.findViewById(R.id.no_result);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         serieListAdapter = new SerieListAdapter(serieList, getContext(), new IRecyclerViewClickListener() {
             @Override
@@ -79,36 +85,43 @@ public class SearchFragment extends Fragment {
 
         final EditText edit_txt = (EditText) view.findViewById(R.id.search_bar);
 
-        /* Change drawable color */
+        /* Change drawables color */
 
         int tintColor = ContextCompat.getColor(view.getContext(), R.color.orange);
 
         Drawable drawable = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_search_black_24dp);
         drawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable.mutate(), tintColor);
-
         drawable.setBounds( 0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-
         edit_txt.setCompoundDrawables(drawable, null, null, null);
 
-
+        Drawable drawable1 = ContextCompat.getDrawable(view.getContext(), R.drawable.ic_sentiment_dissatisfied_black_24dp);
+        DrawableCompat.setTint(drawable1.mutate(), tintColor);
+        ImageView imageView = (ImageView) view.findViewById(R.id.sad);
+        imageView.setBackground(drawable1);
 
         edit_txt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String search = edit_txt.getText().toString();
-
+                    final String search = edit_txt.getText().toString();
 
                     getSerieService().list(ApiUtils.getHeaders(), search, new ResponseListener<List<Serie>>() {
                         @Override
                         public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
                             List<Serie> series = serviceResponse.getData();
-                            for(Serie serie : series) {
-                                serieList.add(serie);
+                            serieList.clear();
+                            if(series.size() != 0) {
+                                noResult.setVisibility(View.INVISIBLE);
+                                for(Serie serie : series) {
+                                    serieList.add(serie);
+                                    serieListAdapter.notifyDataSetChanged();
+                                }
+                            }else{
+                                noResult.setVisibility(View.VISIBLE);
+                                serieListAdapter.notifyDataSetChanged();
                             }
 
-                            serieListAdapter.notifyDataSetChanged();
                         }
                     });
 

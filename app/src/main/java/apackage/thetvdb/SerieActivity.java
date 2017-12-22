@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,10 @@ public class SerieActivity extends AppCompatActivity {
     private TextView seriesName;
     private TextView overview;
     private TextView date;
+    private TextView genre;
     private ImageView banner;
+    private TextView rating;
+    private TextView countRating;
     private RecyclerView recyclerView;
     private ActorListAdapter actorListAdapter;
     private List<Actor> actorList = new ArrayList<>();
@@ -62,7 +67,9 @@ public class SerieActivity extends AppCompatActivity {
         overview = (TextView) findViewById(R.id.overview);
         banner = (ImageView) findViewById(R.id.banner);
         date = (TextView) findViewById(R.id.date);
-
+        genre = (TextView) findViewById(R.id.genre);
+        rating = (TextView) findViewById(R.id.rating);
+        countRating = (TextView) findViewById(R.id.count_rating);
 
         loadSerie(serieRequested);
 
@@ -120,5 +127,18 @@ public class SerieActivity extends AppCompatActivity {
     }
 
     private void loadMoreSerie(SerieDetails serie) {
+        StringBuilder genreString = new StringBuilder();
+        int count = 0;
+        for(String genre : serie.getGenre()) {
+            genreString.append(genre);
+            if(count > 1) { break; }
+            genreString.append(" / ");
+            count++;
+        }
+        genre.setText(genreString);
+        rating.setText(serie.getSiteRating() + "/10");
+        countRating.setText(serie.getSiteRatingCount() + " votes");
+
+        //TODO Add rating and favorite if the user is connected
     }
 }
