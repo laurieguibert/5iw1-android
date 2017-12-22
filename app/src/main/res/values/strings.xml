@@ -2,6 +2,7 @@
     <string name="app_name">TheTVDB</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_home">Home</string>
+    <string name="title_account">Account</string>
     <string name="title_search">Search</string>
     <string name="title_login">Log in</string>
     <string name="title_login_button">Log in</string>

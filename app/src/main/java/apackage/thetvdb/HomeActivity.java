@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import apackage.thetvdb.fragments.AccountFragment;
 import apackage.thetvdb.fragments.SearchFragment;
 
 public class HomeActivity extends AppCompatActivity {
@@ -22,6 +23,11 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new SearchFragment())
+                            .commit();
+                    return true;
+                case R.id.navigation_account:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new AccountFragment())
                             .commit();
                     return true;
             }
