@@ -16,6 +16,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import apackage.thetvdb.adapter.ActorListAdapter;
 import apackage.thetvdb.adapter.IRecyclerViewClickListener;
@@ -46,6 +47,8 @@ public class SerieActivity extends AppCompatActivity {
     private ActorListAdapter actorListAdapter;
     private List<Actor> actorList = new ArrayList<>();
     private SerieDetails serie;
+    private Map<String, String> token = null;
+    private Serie serieRequested = null;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -61,7 +64,7 @@ public class SerieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_serie);
 
         Intent intent = getIntent();
-        Serie serieRequested = intent.getParcelableExtra(SERIE_KEY);
+        serieRequested = intent.getParcelableExtra(SERIE_KEY);
 
         seriesName = (TextView) findViewById(R.id.series_name);
         overview = (TextView) findViewById(R.id.overview);
@@ -74,26 +77,31 @@ public class SerieActivity extends AppCompatActivity {
         loadSerie(serieRequested);
 
 
-        /* get serie */
-
-        getSerieService().get(ApiUtils.getHeaders(), serieRequested.getId(), new ResponseListener<SerieDetails>() {
+        ApiUtils.getConnection(new ResponseListener<Map<String, String>>() {
             @Override
-            public void onSuccess(ServiceResponse<SerieDetails> serviceResponse) {
-                serie = serviceResponse.getData();
-                loadMoreSerie(serie);
-            }
-        });
+            public void onSuccess(ServiceResponse<Map<String, String>> serviceResponse) {
+                token = serviceResponse.getData();
 
-        /* get actors */
+                getSerieService().get(token, serieRequested.getId(), new ResponseListener<SerieDetails>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<SerieDetails> serviceResponse) {
+                        serie = serviceResponse.getData();
+                        loadMoreSerie(serie);
+                    }
+                });
 
-        getSerieService().getActors(ApiUtils.getHeaders(), serieRequested.getId(), new ResponseListener<List<Actor>>() {
-            @Override
-            public void onSuccess(ServiceResponse<List<Actor>> serviceResponse) {
-                List<Actor> actors = serviceResponse.getData();
-                for(Actor actor : actors) {
-                    actorList.add(actor);
-                }
-                actorListAdapter.notifyDataSetChanged();
+                getSerieService().getActors(token, serieRequested.getId(), new ResponseListener<List<Actor>>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<List<Actor>> serviceResponse) {
+                        List<Actor> actors = serviceResponse.getData();
+                        if(actors != null) {
+                            for(Actor actor : actors) {
+                                actorList.add(actor);
+                            }
+                            actorListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
             }
         });
 
@@ -129,13 +137,15 @@ public class SerieActivity extends AppCompatActivity {
     private void loadMoreSerie(SerieDetails serie) {
         StringBuilder genreString = new StringBuilder();
         int count = 0;
-        for(String genre : serie.getGenre()) {
-            genreString.append(genre);
-            if(count > 1) { break; }
-            genreString.append(" / ");
-            count++;
+        if(serie.getGenre() != null) {
+            for(String genre : serie.getGenre()) {
+                genreString.append(genre);
+                if(count > 1) { break; }
+                genreString.append(" / ");
+                count++;
+            }
+            genre.setText(genreString);
         }
-        genre.setText(genreString);
         rating.setText(serie.getSiteRating() + "/10");
         countRating.setText(serie.getSiteRatingCount() + " votes");
 

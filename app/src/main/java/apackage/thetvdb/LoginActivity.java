@@ -12,8 +12,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import apackage.thetvdb.service.LoginService;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,9 +45,5 @@ public class LoginActivity extends AppCompatActivity {
         } catch(JSONException e) {
             e.printStackTrace();
         }
-
-        new LoginService(this, getSharedPreferences("settings", Context.MODE_PRIVATE), errorMessage).execute(String.valueOf(jsonObject));
-
-
     }
 }

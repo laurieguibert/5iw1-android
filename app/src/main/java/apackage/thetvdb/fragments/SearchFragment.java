@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import apackage.thetvdb.R;
 import apackage.thetvdb.SerieActivity;
@@ -46,6 +47,7 @@ public class SearchFragment extends Fragment {
     private LinearLayout noResult;
     private List<Serie> serieList = new ArrayList<>();
     private final static String SERIE_KEY = "serie";
+    private Map<String, String> token = null;
 
     public ISerieService getSerieService() {
         if(serieService == null) {
@@ -60,7 +62,6 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_search,container,false);
-
     }
 
     @Override
@@ -100,32 +101,40 @@ public class SearchFragment extends Fragment {
         ImageView imageView = (ImageView) view.findViewById(R.id.sad);
         imageView.setBackground(drawable1);
 
+        /* get token */
+
         edit_txt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     final String search = edit_txt.getText().toString();
 
-                    getSerieService().list(ApiUtils.getHeaders(), search, new ResponseListener<List<Serie>>() {
+                    ApiUtils.getConnection(new ResponseListener<Map<String, String>>() {
                         @Override
-                        public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
-                            List<Serie> series = serviceResponse.getData();
-                            serieList.clear();
-                            if(series.size() != 0) {
-                                noResult.setVisibility(View.INVISIBLE);
-                                for(Serie serie : series) {
-                                    serieList.add(serie);
-                                    serieListAdapter.notifyDataSetChanged();
-                                }
-                            }else{
-                                noResult.setVisibility(View.VISIBLE);
-                                serieListAdapter.notifyDataSetChanged();
-                            }
+                        public void onSuccess(ServiceResponse<Map<String, String>> serviceResponse) {
+                            token = serviceResponse.getData();
 
+                            getSerieService().list(token, search, new ResponseListener<List<Serie>>() {
+                                @Override
+                                public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
+                                    List<Serie> series = serviceResponse.getData();
+                                    serieList.clear();
+                                    if(series.size() != 0) {
+                                        noResult.setVisibility(View.INVISIBLE);
+                                        for(Serie serie : series) {
+                                            serieList.add(serie);
+                                            serieListAdapter.notifyDataSetChanged();
+                                        }
+                                    }else{
+                                        noResult.setVisibility(View.VISIBLE);
+                                        serieListAdapter.notifyDataSetChanged();
+                                    }
+
+                                }
+                            });
                         }
                     });
-
-
+                    
                 }
                 return false;
             }

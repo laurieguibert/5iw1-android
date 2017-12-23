@@ -3,8 +3,19 @@ package apackage.thetvdb.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import apackage.thetvdb.entity.Account;
+import apackage.thetvdb.entity.ServiceResponse;
+import apackage.thetvdb.entity.Token;
 import apackage.thetvdb.remote.RetrofitClient;
+import apackage.thetvdb.service.ILoginService;
+import apackage.thetvdb.service.IRFLoginService;
 import apackage.thetvdb.service.IRFSerieService;
+import apackage.thetvdb.service.LoginService;
+import apackage.thetvdb.service.ResponseListener;
+import apackage.thetvdb.storage.AccountService;
+import apackage.thetvdb.storage.IAccountService;
+import apackage.thetvdb.storage.ITokenService;
+import apackage.thetvdb.storage.TokenService;
 
 /**
  * Created by gianniazizi on 16/12/2017.
@@ -12,21 +23,80 @@ import apackage.thetvdb.service.IRFSerieService;
 
 public class ApiUtils {
     private static final String BASE_URL = "https://api.thetvdb.com";
-    private static Map<String, String> headers = null;
-    private static String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTM5NTMzMTEsImlkIjoiRVNHSSIsIm9yaWdfaWF0IjoxNTEzODY2OTExfQ.N_YcLPNRQW_NjrtzCBBHTX8vFrVRrCKJfBB6Jl_vp8GSL7yf3_amGSZUXvsO5NELRvoRtGZ3Md8X1JJcQwYUi8eURkhwxoP7i6fleH4E1SB5ryRwcUXGY1KqjSIbvz1WM13kgbQNORh3ch1Szrb_BKOT_pNAmvihrBBpxEI1JV7wtIitsrR9EjPWJM7aG813JhMxVvyZpB7wjNm52ywu1z1i35YD_ZNrUd0Hmh6ZN16hQtEyrF9nejEYObvSNoY2zymlZhU2Ed56x68Az2cTg5MQ5-gMqrxrd58P6pW8L4eVVmbj0ZgfHsR44XG39IMy00sT5fZOuUe0W5A0j6DPoQ";
+    private static Map<String, String> headers = new HashMap<>();
+    private static Map<String, String> body = new HashMap<>();
+    public static String API_KEY = "97DCD0C43454616A";
+    private static ITokenService storageTokenService;
+    private static IAccountService storageAccountService;
+    private static ILoginService loginService;
+
+    private static IAccountService getStorageAccountService() {
+        if(storageAccountService == null) {
+            storageAccountService = new AccountService();
+        }
+
+        return storageAccountService;
+    }
+
+    private static ITokenService getStorageTokenService() {
+        if(storageTokenService == null) {
+            storageTokenService = new TokenService();
+        }
+
+        return storageTokenService;
+    }
+
+    private static ILoginService getILoginService() {
+        if(loginService == null) {
+            loginService = new LoginService();
+        }
+
+        return loginService;
+    }
 
     public static IRFSerieService getSerieService() {
         return RetrofitClient.getClient(BASE_URL).create(IRFSerieService.class);
     }
 
-    public static Map<String, String> getHeaders() {
-        // TODO checker si le token est toujours bon ici
-        if(headers == null) {
-            headers = new HashMap<>();
-            headers.put("Authorization", "Bearer " + token);
-            headers.put("Content-Type", "application/json");
-        }
+    public static IRFLoginService getLoginService() {
+        return RetrofitClient.getClient(BASE_URL).create(IRFLoginService.class);
+    }
 
-        return headers;
+    public static void getConnection(final ResponseListener<Map<String, String>> responseListener) {
+        Token token = getStorageTokenService().getToken();
+        body.put("apikey", API_KEY);
+        if(token == null) {
+            Account account = getStorageAccountService().getAccount();
+            if(account == null) {
+                getILoginService().login(body , new ResponseListener<Token>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<Token> serviceResponse) {
+                        Token token = serviceResponse.getData();
+                        headers.put("Authorization", "Bearer " + token.getToken());
+                        headers.put("Content-Type", "application/json");
+                        responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+                    }
+                });
+            }else{
+                body.put("username", account.getUsername());
+                body.put("userkey", account.getPassword());
+                getILoginService().login(body , new ResponseListener<Token>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<Token> serviceResponse) {
+                        Token token = serviceResponse.getData();
+                        headers.put("Authorization", "Bearer " + token.getToken());
+                        headers.put("Content-Type", "application/json");
+                        responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+                    }
+                });
+            }
+        }else{
+            headers.put("Authorization", "Bearer " + token.getToken());
+            headers.put("Content-Type", "application/json");
+            responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+        }
     }
 }
+
+
+

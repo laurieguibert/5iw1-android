@@ -13,7 +13,7 @@ import apackage.thetvdb.entity.ServiceResponse;
  */
 
 public interface ISerieService {
-    void list(Map<String, String> map, String search, ResponseListener<List<Serie>> responseListener);
-    void getActors(Map<String, String> map, int id, ResponseListener<List<Actor>> responseListener);
-    void get(Map<String, String> map, int id, ResponseListener<SerieDetails> responseListener);
+    void list(Map<String, String> token, String search, ResponseListener<List<Serie>> responseListener);
+    void getActors(Map<String, String> token, int id, ResponseListener<List<Actor>> responseListener);
+    void get(Map<String, String> token, int id, ResponseListener<SerieDetails> responseListener);
 }
