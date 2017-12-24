@@ -1,52 +1,61 @@
 package apackage.thetvdb;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import apackage.thetvdb.fragments.AccountFragment;
+
+import apackage.thetvdb.entity.Account;
 import apackage.thetvdb.fragments.SearchFragment;
+import apackage.thetvdb.storage.AccountService;
+import apackage.thetvdb.storage.IAccountService;
 
 public class HomeActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private IAccountService storageAccountService;
+    private RelativeLayout noConnected;
+    private Button connect;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new SearchFragment())
-                            .commit();
-                    return true;
-                case R.id.navigation_account:
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new AccountFragment())
-                            .commit();
-                    return true;
-            }
-            return false;
+    private IAccountService getStorageAccountService() {
+        if(storageAccountService == null) {
+            storageAccountService = new AccountService();
         }
-    };
+
+        return storageAccountService;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new SearchFragment())
                 .commit();
 
+        noConnected = (RelativeLayout) findViewById(R.id.no_connected);
+        connect = (Button) findViewById(R.id.connect);
+
+
+        Account account = getStorageAccountService().getAccount();
+        if(account != null) {
+
+        }else{
+            noConnected.setVisibility(View.VISIBLE);
+        }
+
+        connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }

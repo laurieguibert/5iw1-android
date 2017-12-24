@@ -16,13 +16,14 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/search_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_title"
             android:fontFamily="@font/falling_sky"
             android:textColor="@color/white"
             android:textSize="40dp"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:paddingLeft="20dp"/>
 
         <RelativeLayout
@@ -33,22 +34,43 @@
     </LinearLayout>
 
 
-
-
-
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/no_connected"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:background="@color/grey"
-        app:itemIconTint="@color/orange"
-        app:itemTextColor="@color/orange"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/orange"
+                android:layout_marginTop="5dp"
+                android:text="@string/connection_message" />
+
+            <Button
+                android:id="@+id/connect"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="@color/orange"
+                android:text="@string/title_login_button"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
 
 </android.support.constraint.ConstraintLayout>

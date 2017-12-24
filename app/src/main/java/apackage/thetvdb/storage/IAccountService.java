@@ -1,5 +1,7 @@
 package apackage.thetvdb.storage;
 
+import java.util.Map;
+
 import apackage.thetvdb.entity.Account;
 
 /**
@@ -8,4 +10,5 @@ import apackage.thetvdb.entity.Account;
 
 public interface IAccountService {
     Account getAccount();
+    void addAccount(Map<String, String> credentials);
 }

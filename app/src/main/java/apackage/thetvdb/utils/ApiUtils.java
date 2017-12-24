@@ -1,5 +1,8 @@
 package apackage.thetvdb.utils;
 
+import android.util.Log;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +19,7 @@ import apackage.thetvdb.storage.AccountService;
 import apackage.thetvdb.storage.IAccountService;
 import apackage.thetvdb.storage.ITokenService;
 import apackage.thetvdb.storage.TokenService;
+import io.realm.Realm;
 
 /**
  * Created by gianniazizi on 16/12/2017.
@@ -29,6 +33,16 @@ public class ApiUtils {
     private static ITokenService storageTokenService;
     private static IAccountService storageAccountService;
     private static ILoginService loginService;
+    private static Realm realm;
+    private static Account account;
+
+    private static Realm getRealm() {
+        if(realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+
+        return realm;
+    }
 
     private static IAccountService getStorageAccountService() {
         if(storageAccountService == null) {
@@ -66,35 +80,66 @@ public class ApiUtils {
         Token token = getStorageTokenService().getToken();
         body.put("apikey", API_KEY);
         if(token == null) {
-            Account account = getStorageAccountService().getAccount();
-            if(account == null) {
-                getILoginService().login(body , new ResponseListener<Token>() {
-                    @Override
-                    public void onSuccess(ServiceResponse<Token> serviceResponse) {
-                        Token token = serviceResponse.getData();
-                        headers.put("Authorization", "Bearer " + token.getToken());
-                        headers.put("Content-Type", "application/json");
-                        responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
-                    }
-                });
-            }else{
-                body.put("username", account.getUsername());
-                body.put("userkey", account.getPassword());
-                getILoginService().login(body , new ResponseListener<Token>() {
-                    @Override
-                    public void onSuccess(ServiceResponse<Token> serviceResponse) {
-                        Token token = serviceResponse.getData();
-                        headers.put("Authorization", "Bearer " + token.getToken());
-                        headers.put("Content-Type", "application/json");
-                        responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
-                    }
-                });
-            }
+            getToken(responseListener);
         }else{
-            headers.put("Authorization", "Bearer " + token.getToken());
-            headers.put("Content-Type", "application/json");
-            responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+            if (token.getDate().getTime() - new Date().getTime() > 3600*23) {
+               getToken(responseListener);
+            }else{
+                headers.put("Authorization", "Bearer " + token.getToken());
+                headers.put("Content-Type", "application/json");
+                responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+            }
         }
+    }
+
+    private static void getToken(final ResponseListener<Map<String, String>> responseListener) {
+        account = getStorageAccountService().getAccount();
+
+        if(account == null) {
+            getILoginService().login(body , new ResponseListener<Token>() {
+                @Override
+                public void onSuccess(ServiceResponse<Token> serviceResponse) {
+                    final Token token = serviceResponse.getData();
+
+                    getStorageTokenService().addToken(token);
+
+                    headers.put("Authorization", "Bearer " + token.getToken());
+                    headers.put("Content-Type", "application/json");
+                    responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+                }
+            });
+        }else{
+            body.put("username", account.getUsername());
+            body.put("userkey", account.getPassword());
+            getILoginService().login(body , new ResponseListener<Token>() {
+                @Override
+                public void onSuccess(ServiceResponse<Token> serviceResponse) {
+                    Token token = serviceResponse.getData();
+                    headers.put("Authorization", "Bearer " + token.getToken());
+                    headers.put("Content-Type", "application/json");
+                    responseListener.onSuccess(new ServiceResponse<Map<String, String>>(headers));
+                }
+            });
+        }
+    }
+
+    public static void checkAccount(final Map<String, String> body, final ResponseListener<Boolean> responseListener) {
+        body.put("apikey", API_KEY);
+        getILoginService().login(body, new ResponseListener<Token>() {
+            @Override
+            public void onSuccess(ServiceResponse<Token> serviceResponse) {
+                final Token token = serviceResponse.getData();
+                Boolean response = false;
+
+                if(token != null) {
+                    getStorageTokenService().addToken(token);
+                    getStorageAccountService().addAccount(body);
+                    response = true;
+                }
+
+                responseListener.onSuccess(new ServiceResponse<>(response));
+            }
+        });
     }
 }
 

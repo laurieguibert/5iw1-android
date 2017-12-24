@@ -9,4 +9,5 @@ import apackage.thetvdb.service.ResponseListener;
 
 public interface ITokenService {
     Token getToken();
+    void addToken(Token token);
 }

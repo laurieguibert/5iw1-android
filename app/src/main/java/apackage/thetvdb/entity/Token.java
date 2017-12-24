@@ -26,4 +26,12 @@ public class Token extends RealmObject {
     }
 
     public Token() {}
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

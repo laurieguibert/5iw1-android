@@ -12,9 +12,13 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         Realm.init(this);
+
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
+
+        // TODO à supprimer
+        //Realm.deleteRealm(config);
 
         Realm.setDefaultConfiguration(config);
     }

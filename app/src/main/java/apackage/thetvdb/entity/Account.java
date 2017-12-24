@@ -9,20 +9,10 @@ import io.realm.annotations.PrimaryKey;
 
 public class Account extends RealmObject {
 
-    @PrimaryKey
-    private int id;
     private String username;
     private String password;
 
     public Account() {}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

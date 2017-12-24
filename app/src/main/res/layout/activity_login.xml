@@ -63,6 +63,8 @@
         android:layout_below="@+id/submit"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:textColor="@color/red" />
+        android:textColor="@color/red"
+        android:visibility="invisible"
+        android:text="@string/login_error"/>
 
 </RelativeLayout>
