@@ -22,6 +22,8 @@ import retrofit2.Response;
  * Created by gianniazizi on 16/12/2017.
  */
 
+// TODO gérer le onFailure -> No internet connection
+
 public class SerieService implements ISerieService {
 
     private IRFSerieService serieService;

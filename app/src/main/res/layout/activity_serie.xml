@@ -93,6 +93,16 @@
                 android:textSize="15dp"
                 android:paddingLeft="5dp"
                 android:gravity="center"/>
+            
+            <RatingBar
+                android:id="@+id/rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/RatingBar"
+                android:stepSize="0.5"
+                android:numStars="5"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
 
 
             <TextView

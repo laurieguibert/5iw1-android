@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -49,6 +50,7 @@ public class SerieActivity extends AppCompatActivity {
     private SerieDetails serie;
     private Map<String, String> token = null;
     private Serie serieRequested = null;
+    private RatingBar ratingBar;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -73,6 +75,7 @@ public class SerieActivity extends AppCompatActivity {
         genre = (TextView) findViewById(R.id.genre);
         rating = (TextView) findViewById(R.id.rating);
         countRating = (TextView) findViewById(R.id.count_rating);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
 
         loadSerie(serieRequested);
 
@@ -119,8 +122,15 @@ public class SerieActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(actorListAdapter);
 
-    }
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                Log.e("DEV", "RATING : " + String.valueOf(ratingBar.getRating()));
+            }
+        });
 
+
+    }
 
     private void loadSerie(Serie serie) {
         seriesName.setText(serie.getSeriesName());
@@ -151,4 +161,5 @@ public class SerieActivity extends AppCompatActivity {
 
         //TODO Add rating and favorite if the user is connected
     }
+
 }
