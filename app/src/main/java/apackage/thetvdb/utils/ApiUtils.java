@@ -13,6 +13,7 @@ import apackage.thetvdb.remote.RetrofitClient;
 import apackage.thetvdb.service.ILoginService;
 import apackage.thetvdb.service.IRFLoginService;
 import apackage.thetvdb.service.IRFSerieService;
+import apackage.thetvdb.service.IRFUserService;
 import apackage.thetvdb.service.LoginService;
 import apackage.thetvdb.service.ResponseListener;
 import apackage.thetvdb.storage.AccountService;
@@ -76,12 +77,18 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL).create(IRFLoginService.class);
     }
 
+    public static IRFUserService getUserService() {
+        return RetrofitClient.getClient(BASE_URL).create(IRFUserService.class);
+    }
+
     public static void getConnection(final ResponseListener<Map<String, String>> responseListener) {
         Token token = getStorageTokenService().getToken();
+        Log.e("DEV", "TOKEN? : " + token.getToken());
         body.put("apikey", API_KEY);
-        if(token == null) {
+        if(token == null || token.getToken() == null) {
             getToken(responseListener);
         }else{
+            Log.e("DEV", "DATE TOKEN : " + token.getDate());
             if (token.getDate().getTime() - new Date().getTime() > 3600*23) {
                getToken(responseListener);
             }else{

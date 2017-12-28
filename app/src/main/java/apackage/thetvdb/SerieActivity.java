@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -23,12 +24,16 @@ import apackage.thetvdb.adapter.ActorListAdapter;
 import apackage.thetvdb.adapter.IRecyclerViewClickListener;
 import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Actor;
+import apackage.thetvdb.entity.Rating;
+import apackage.thetvdb.entity.RatingList;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.SerieDetails;
 import apackage.thetvdb.entity.ServiceResponse;
 import apackage.thetvdb.service.ISerieService;
+import apackage.thetvdb.service.IUserService;
 import apackage.thetvdb.service.ResponseListener;
 import apackage.thetvdb.service.SerieService;
+import apackage.thetvdb.service.UserService;
 import apackage.thetvdb.utils.ApiUtils;
 
 public class SerieActivity extends AppCompatActivity {
@@ -36,6 +41,7 @@ public class SerieActivity extends AppCompatActivity {
     private final static String SERIE_KEY = "serie";
 
     private ISerieService serieService;
+    private IUserService userService;
 
     private TextView seriesName;
     private TextView overview;
@@ -58,6 +64,14 @@ public class SerieActivity extends AppCompatActivity {
         }
 
         return serieService;
+    }
+
+    private IUserService getUserService() {
+        if(userService == null) {
+            userService = new UserService();
+        }
+
+        return userService;
     }
 
     @Override
@@ -105,6 +119,33 @@ public class SerieActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                // TODO IF ACCOUNT IS SET
+                getUserService().getRatings(token, new ResponseListener<List<Rating>>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<List<Rating>> serviceResponse) {
+                        List<Rating> ratings = serviceResponse.getData();
+                        for(Rating rating: ratings) {
+                            if(rating.getRatingItemId().equals(serieRequested.getId())) {
+                                if(rating.getRating() != null) {
+                                    Log.e("DEV", "TEST : " + rating.getRating());
+                                    ratingBar.setRating(rating.getRating() / 2);
+                                }
+                            }
+                        }
+
+                        ratingBar.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                // TODO IF ACCOUNT IS SET
+                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                    int rating = (int) ratingBar.getRating() * 2;
+                    getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
+                    }
+                });
             }
         });
 
@@ -121,15 +162,6 @@ public class SerieActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(actorListAdapter);
-
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                Log.e("DEV", "RATING : " + String.valueOf(ratingBar.getRating()));
-            }
-        });
-
-
     }
 
     private void loadSerie(Serie serie) {
