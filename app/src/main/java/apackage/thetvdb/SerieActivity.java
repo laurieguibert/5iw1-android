@@ -128,8 +128,8 @@ public class SerieActivity extends AppCompatActivity {
                         for(Rating rating: ratings) {
                             if(rating.getRatingItemId().equals(serieRequested.getId())) {
                                 if(rating.getRating() != null) {
-                                    Log.e("DEV", "TEST : " + rating.getRating());
-                                    ratingBar.setRating(rating.getRating() / 2);
+                                    float result = (float) (rating.getRating() / 2.0f);
+                                    ratingBar.setRating(result);
                                 }
                             }
                         }
@@ -142,8 +142,8 @@ public class SerieActivity extends AppCompatActivity {
                 ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                    int rating = (int) ratingBar.getRating() * 2;
-                    getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
+                        int rating = (int) (ratingBar.getRating() * 2);
+                        getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
                     }
                 });
             }
