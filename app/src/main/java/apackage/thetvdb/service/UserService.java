@@ -5,6 +5,8 @@ import android.util.Log;
 import java.util.List;
 import java.util.Map;
 
+import apackage.thetvdb.entity.Favorite;
+import apackage.thetvdb.entity.FavoriteList;
 import apackage.thetvdb.entity.Rating;
 import apackage.thetvdb.entity.RatingList;
 import apackage.thetvdb.entity.ServiceResponse;
@@ -31,12 +33,12 @@ public class UserService implements IUserService {
         getUserService().evaluate(token, itemType, itemId, itemRating).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-
+                // TODO VOIR POUR UNE RÉPONSE
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-
+                // TODO CATCH ERROR
             }
         });
     }
@@ -53,6 +55,52 @@ public class UserService implements IUserService {
 
             @Override
             public void onFailure(Call<RatingList> call, Throwable t) {
+                // TODO CATCH ERROR
+            }
+        });
+    }
+
+    @Override
+    public void addFavorite(Map<String, String> token, int itemId) {
+        getUserService().addFavorite(token, itemId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                // TODO VOIR POUR UNE RÉPONSE
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // TODO CATCH ERROR
+            }
+        });
+    }
+
+    @Override
+    public void deleteFavorite(Map<String, String> token, int itemId) {
+        getUserService().deleteFavorite(token, itemId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                // TODO VOIR POUR UNE RÉPONSE
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                // TODO CATCH ERROR
+            }
+        });
+    }
+
+    @Override
+    public void getFavorites(Map<String, String> token, final ResponseListener<List<String>> responseListener) {
+        getUserService().getFavorites(token).enqueue(new Callback<FavoriteList>() {
+            @Override
+            public void onResponse(Call<FavoriteList> call, Response<FavoriteList> response) {
+                List<String> favorites = response.body().getData().getFavorites();
+                responseListener.onSuccess(new ServiceResponse<>(favorites));
+            }
+
+            @Override
+            public void onFailure(Call<FavoriteList> call, Throwable t) {
 
             }
         });

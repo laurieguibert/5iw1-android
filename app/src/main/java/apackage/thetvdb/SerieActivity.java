@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -57,6 +58,7 @@ public class SerieActivity extends AppCompatActivity {
     private Map<String, String> token = null;
     private Serie serieRequested = null;
     private RatingBar ratingBar;
+    private MaterialFavoriteButton favoriteButton;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -90,6 +92,7 @@ public class SerieActivity extends AppCompatActivity {
         rating = (TextView) findViewById(R.id.rating);
         countRating = (TextView) findViewById(R.id.count_rating);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        favoriteButton = (MaterialFavoriteButton) findViewById(R.id.favorite);
 
         loadSerie(serieRequested);
 
@@ -144,6 +147,30 @@ public class SerieActivity extends AppCompatActivity {
                     public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                         int rating = (int) (ratingBar.getRating() * 2);
                         getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
+                    }
+                });
+
+                // TODO IF ACCOUNT IS SET
+                getUserService().getFavorites(token, new ResponseListener<List<String>>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<List<String>> serviceResponse) {
+                        for(String favorite : serviceResponse.getData()) {
+                            if(favorite.equals(serieRequested.getId().toString())) {
+                                favoriteButton.setFavorite(true, false);
+                            }
+                        }
+                    }
+                });
+
+                // TODO IF ACCOUNT IS SET
+                favoriteButton.setOnFavoriteChangeListener(new MaterialFavoriteButton.OnFavoriteChangeListener() {
+                    @Override
+                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
+                        if(favorite) {
+                            getUserService().addFavorite(token, serieRequested.getId());
+                        }else{
+                            getUserService().deleteFavorite(token, serieRequested.getId());
+                        }
                     }
                 });
             }
