@@ -24,6 +24,7 @@ import java.util.Map;
 import apackage.thetvdb.adapter.ActorListAdapter;
 import apackage.thetvdb.adapter.IRecyclerViewClickListener;
 import apackage.thetvdb.adapter.SerieListAdapter;
+import apackage.thetvdb.entity.Account;
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.Rating;
 import apackage.thetvdb.entity.RatingList;
@@ -35,6 +36,8 @@ import apackage.thetvdb.service.IUserService;
 import apackage.thetvdb.service.ResponseListener;
 import apackage.thetvdb.service.SerieService;
 import apackage.thetvdb.service.UserService;
+import apackage.thetvdb.storage.AccountService;
+import apackage.thetvdb.storage.IAccountService;
 import apackage.thetvdb.utils.ApiUtils;
 
 public class SerieActivity extends AppCompatActivity {
@@ -59,6 +62,7 @@ public class SerieActivity extends AppCompatActivity {
     private Serie serieRequested = null;
     private RatingBar ratingBar;
     private MaterialFavoriteButton favoriteButton;
+    private IAccountService storageAccountService;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -74,6 +78,14 @@ public class SerieActivity extends AppCompatActivity {
         }
 
         return userService;
+    }
+
+    private IAccountService getStorageAccountService() {
+        if(storageAccountService == null) {
+            storageAccountService = new AccountService();
+        }
+
+        return storageAccountService;
     }
 
     @Override
@@ -123,56 +135,59 @@ public class SerieActivity extends AppCompatActivity {
                     }
                 });
 
-                // TODO IF ACCOUNT IS SET
-                getUserService().getRatings(token, new ResponseListener<List<Rating>>() {
-                    @Override
-                    public void onSuccess(ServiceResponse<List<Rating>> serviceResponse) {
-                        List<Rating> ratings = serviceResponse.getData();
-                        for(Rating rating: ratings) {
-                            if(rating.getRatingItemId().equals(serieRequested.getId())) {
-                                if(rating.getRating() != null) {
-                                    float result = (float) (rating.getRating() / 2.0f);
-                                    ratingBar.setRating(result);
+                Account account = getStorageAccountService().getAccount();
+
+                if(account != null) {
+                    getUserService().getRatings(token, new ResponseListener<List<Rating>>() {
+                        @Override
+                        public void onSuccess(ServiceResponse<List<Rating>> serviceResponse) {
+                            List<Rating> ratings = serviceResponse.getData();
+                            for(Rating rating: ratings) {
+                                if(rating.getRatingItemId().equals(serieRequested.getId())) {
+                                    if(rating.getRating() != null) {
+                                        float result = (float) (rating.getRating() / 2.0f);
+                                        ratingBar.setRating(result);
+                                    }
+                                }
+                            }
+
+                            ratingBar.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                        @Override
+                        public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                            int rating = (int) (ratingBar.getRating() * 2);
+                            getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
+                        }
+                    });
+
+                    getUserService().getFavorites(token, new ResponseListener<List<String>>() {
+                        @Override
+                        public void onSuccess(ServiceResponse<List<String>> serviceResponse) {
+                            for(String favorite : serviceResponse.getData()) {
+                                if(favorite.equals(serieRequested.getId().toString())) {
+                                    favoriteButton.setFavorite(true, false);
                                 }
                             }
                         }
+                    });
 
-                        ratingBar.setVisibility(View.VISIBLE);
-                    }
-                });
-
-                // TODO IF ACCOUNT IS SET
-                ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                        int rating = (int) (ratingBar.getRating() * 2);
-                        getUserService().evaluate(token ,"series", serieRequested.getId(), rating);
-                    }
-                });
-
-                // TODO IF ACCOUNT IS SET
-                getUserService().getFavorites(token, new ResponseListener<List<String>>() {
-                    @Override
-                    public void onSuccess(ServiceResponse<List<String>> serviceResponse) {
-                        for(String favorite : serviceResponse.getData()) {
-                            if(favorite.equals(serieRequested.getId().toString())) {
-                                favoriteButton.setFavorite(true, false);
+                    favoriteButton.setOnFavoriteChangeListener(new MaterialFavoriteButton.OnFavoriteChangeListener() {
+                        @Override
+                        public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
+                            if(favorite) {
+                                getUserService().addFavorite(token, serieRequested.getId());
+                            }else{
+                                getUserService().deleteFavorite(token, serieRequested.getId());
                             }
                         }
-                    }
-                });
-
-                // TODO IF ACCOUNT IS SET
-                favoriteButton.setOnFavoriteChangeListener(new MaterialFavoriteButton.OnFavoriteChangeListener() {
-                    @Override
-                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
-                        if(favorite) {
-                            getUserService().addFavorite(token, serieRequested.getId());
-                        }else{
-                            getUserService().deleteFavorite(token, serieRequested.getId());
-                        }
-                    }
-                });
+                    });
+                }else{
+                    favoriteButton.setVisibility(View.INVISIBLE);
+                    ratingBar.setVisibility(View.INVISIBLE);
+                }
             }
         });
 

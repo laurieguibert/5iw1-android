@@ -83,7 +83,6 @@ public class ApiUtils {
 
     public static void getConnection(final ResponseListener<Map<String, String>> responseListener) {
         Token token = getStorageTokenService().getToken();
-        Log.e("DEV", "TOKEN? : " + token.getToken());
         body.put("apikey", API_KEY);
         if(token == null || token.getToken() == null) {
             getToken(responseListener);

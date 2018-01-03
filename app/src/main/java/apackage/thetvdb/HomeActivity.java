@@ -14,6 +14,9 @@ import apackage.thetvdb.entity.Account;
 import apackage.thetvdb.fragments.SearchFragment;
 import apackage.thetvdb.storage.AccountService;
 import apackage.thetvdb.storage.IAccountService;
+import apackage.thetvdb.utils.ApiUtils;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -21,6 +24,17 @@ public class HomeActivity extends AppCompatActivity {
     private IAccountService storageAccountService;
     private RelativeLayout noConnected;
     private Button connect;
+    private LinearLayout menu;
+    private Button logout;
+    private static Realm realm;
+
+    private Realm getRealm() {
+        if(realm == null) {
+            realm = Realm.getDefaultInstance();
+        }
+
+        return realm;
+    }
 
     private IAccountService getStorageAccountService() {
         if(storageAccountService == null) {
@@ -40,10 +54,27 @@ public class HomeActivity extends AppCompatActivity {
 
         noConnected = (RelativeLayout) findViewById(R.id.no_connected);
         connect = (Button) findViewById(R.id.connect);
+        menu = (LinearLayout) findViewById(R.id.menu);
+        logout = (Button) findViewById(R.id.logout);
 
 
         Account account = getStorageAccountService().getAccount();
         if(account != null) {
+            menu.setVisibility(View.VISIBLE);
+
+            logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getRealm().executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            realm.deleteAll();
+                        }
+                    });
+                    Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+            });
 
         }else{
             noConnected.setVisibility(View.VISIBLE);
