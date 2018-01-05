@@ -39,6 +39,15 @@ public class Serie implements Parcelable {
     @Expose
     private String status;
 
+    public Serie(int id, String overview, String status, String seriesName, String banner, String firstAired) {
+        this.id = id;
+        this.overview = overview;
+        this.status = status;
+        this.seriesName = seriesName;
+        this.banner = banner;
+        this.firstAired = firstAired;
+    }
+
     public List<String> getAliases() {
         return aliases;
     }

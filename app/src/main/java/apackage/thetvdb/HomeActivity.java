@@ -26,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button connect;
     private LinearLayout menu;
     private Button logout;
+    private Button favorite;
     private static Realm realm;
 
     private Realm getRealm() {
@@ -56,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         connect = (Button) findViewById(R.id.connect);
         menu = (LinearLayout) findViewById(R.id.menu);
         logout = (Button) findViewById(R.id.logout);
+        favorite = (Button) findViewById(R.id.favorite);
 
 
         Account account = getStorageAccountService().getAccount();
@@ -72,6 +74,14 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     });
                     Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            favorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(HomeActivity.this, FavoriteActivity.class);
                     startActivity(intent);
                 }
             });

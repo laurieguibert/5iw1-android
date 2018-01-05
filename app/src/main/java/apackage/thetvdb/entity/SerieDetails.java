@@ -60,6 +60,17 @@ public class SerieDetails {
     @SerializedName("zap2itId")
     @Expose
     private String zap2itId;
+    @SerializedName("id")
+    @Expose
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getAdded() {
         return added;
