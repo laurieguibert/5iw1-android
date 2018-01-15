@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class SearchFragment extends Fragment {
     private List<Serie> serieList = new ArrayList<>();
     private final static String SERIE_KEY = "serie";
     private Map<String, String> token = null;
+    private ProgressBar progressBar;
 
     public ISerieService getSerieService() {
         if(serieService == null) {
@@ -68,6 +70,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         noResult = (LinearLayout) view.findViewById(R.id.no_result);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         serieListAdapter = new SerieListAdapter(serieList, getContext(), new IRecyclerViewClickListener() {
@@ -109,6 +112,8 @@ public class SearchFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     final String search = edit_txt.getText().toString();
 
+                    progressBar.setVisibility(View.VISIBLE);
+
                     ApiUtils.getConnection(new ResponseListener<Map<String, String>>() {
                         @Override
                         public void onSuccess(ServiceResponse<Map<String, String>> serviceResponse) {
@@ -117,6 +122,7 @@ public class SearchFragment extends Fragment {
                             getSerieService().list(token, search, new ResponseListener<List<Serie>>() {
                                 @Override
                                 public void onSuccess(ServiceResponse<List<Serie>> serviceResponse) {
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     List<Serie> series = serviceResponse.getData();
                                     serieList.clear();
                                     if(series.size() != 0) {
