@@ -28,6 +28,7 @@ import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Account;
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.EpisodeList;
+import apackage.thetvdb.entity.Favorite;
 import apackage.thetvdb.entity.Rating;
 import apackage.thetvdb.entity.RatingList;
 import apackage.thetvdb.entity.Season;
