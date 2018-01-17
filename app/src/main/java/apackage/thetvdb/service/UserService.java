@@ -33,12 +33,12 @@ public class UserService implements IUserService {
         getUserService().evaluate(token, itemType, itemId, itemRating).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                // TODO VOIR POUR UNE RÉPONSE
+
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                // TODO CATCH ERROR
+
             }
         });
     }
@@ -55,7 +55,7 @@ public class UserService implements IUserService {
 
             @Override
             public void onFailure(Call<RatingList> call, Throwable t) {
-                // TODO CATCH ERROR
+
             }
         });
     }
@@ -65,12 +65,12 @@ public class UserService implements IUserService {
         getUserService().addFavorite(token, itemId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                // TODO VOIR POUR UNE RÉPONSE
+
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                // TODO CATCH ERROR
+
             }
         });
     }
@@ -80,12 +80,12 @@ public class UserService implements IUserService {
         getUserService().deleteFavorite(token, itemId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                // TODO VOIR POUR UNE RÉPONSE
+
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                // TODO CATCH ERROR
+
             }
         });
     }

@@ -23,13 +23,17 @@ import java.util.Map;
 
 import apackage.thetvdb.adapter.ActorListAdapter;
 import apackage.thetvdb.adapter.IRecyclerViewClickListener;
+import apackage.thetvdb.adapter.SeasonListAdapter;
 import apackage.thetvdb.adapter.SerieListAdapter;
 import apackage.thetvdb.entity.Account;
 import apackage.thetvdb.entity.Actor;
+import apackage.thetvdb.entity.EpisodeList;
 import apackage.thetvdb.entity.Rating;
 import apackage.thetvdb.entity.RatingList;
+import apackage.thetvdb.entity.Season;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.SerieDetails;
+import apackage.thetvdb.entity.SerieList;
 import apackage.thetvdb.entity.ServiceResponse;
 import apackage.thetvdb.service.ISerieService;
 import apackage.thetvdb.service.IUserService;
@@ -55,6 +59,7 @@ public class SerieActivity extends AppCompatActivity {
     private TextView rating;
     private TextView countRating;
     private RecyclerView recyclerView;
+    private RecyclerView recyclerViewSeasons;
     private ActorListAdapter actorListAdapter;
     private List<Actor> actorList = new ArrayList<>();
     private SerieDetails serie;
@@ -63,6 +68,9 @@ public class SerieActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private MaterialFavoriteButton favoriteButton;
     private IAccountService storageAccountService;
+    private int seasonsNumber;
+    private TextView seasonsTextView;
+    private SeasonListAdapter seasonListAdapter;
 
     private ISerieService getSerieService() {
         if(serieService == null) {
@@ -105,6 +113,9 @@ public class SerieActivity extends AppCompatActivity {
         countRating = (TextView) findViewById(R.id.count_rating);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         favoriteButton = (MaterialFavoriteButton) findViewById(R.id.favorite);
+        seasonsTextView = (TextView) findViewById(R.id.seasons);
+        recyclerViewSeasons = (RecyclerView) findViewById(R.id.recycler_view_seasons);
+
 
         loadSerie(serieRequested);
 
@@ -132,6 +143,31 @@ public class SerieActivity extends AppCompatActivity {
                             }
                             actorListAdapter.notifyDataSetChanged();
                         }
+                    }
+                });
+
+                getSerieService().getSeasons(token, serieRequested.getId(), new ResponseListener<Season>() {
+                    @Override
+                    public void onSuccess(ServiceResponse<Season> serviceResponse) {
+                        final Season season = serviceResponse.getData();
+                        seasonsNumber = season.getAiredSeasons().size();
+
+                        seasonListAdapter = new SeasonListAdapter(season.getAiredSeasons(), SerieActivity.this, new IRecyclerViewClickListener() {
+                            @Override
+                            public void onClickListener(int position) {
+                                String seasonRequested = season.getAiredSeasons().get(position);
+                                Intent intent = new Intent(SerieActivity.this, EpisodeActivity.class);
+                                intent.putExtra(SERIE_KEY, serieRequested);
+                                intent.putExtra("seasonNumber", seasonRequested);
+                                startActivity(intent);
+                            }
+                        });
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(SerieActivity.this);
+                        recyclerViewSeasons.setLayoutManager(mLayoutManager);
+                        recyclerViewSeasons.setItemAnimator(new DefaultItemAnimator());
+                        recyclerViewSeasons.setAdapter(seasonListAdapter);
+
                     }
                 });
 
@@ -196,7 +232,7 @@ public class SerieActivity extends AppCompatActivity {
         actorListAdapter = new ActorListAdapter(actorList, this, new IRecyclerViewClickListener() {
             @Override
             public void onClickListener(int position) {
-                // TODO implement on click
+
             }
         });
 
@@ -233,7 +269,6 @@ public class SerieActivity extends AppCompatActivity {
         rating.setText(serie.getSiteRating() + "/10");
         countRating.setText(serie.getSiteRatingCount() + " votes");
 
-        //TODO Add rating and favorite if the user is connected
     }
 
 }

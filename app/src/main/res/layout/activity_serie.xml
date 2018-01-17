@@ -146,6 +146,23 @@
                     android:layout_height="wrap_content">
                 </android.support.v7.widget.RecyclerView>
 
+                <TextView
+                    android:id="@+id/seasons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/falling_sky"
+                    android:textColor="@color/orange"
+                    android:text="@string/seasonTitle"
+                    android:textSize="30dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="5dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_seasons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
+
             </LinearLayout>
 
 

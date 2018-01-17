@@ -87,7 +87,6 @@ public class ApiUtils {
         if(token == null || token.getToken() == null) {
             getToken(responseListener);
         }else{
-            Log.e("DEV", "DATE TOKEN : " + token.getDate().getTime());
             if (new Date().getTime() - token.getDate().getTime() > 3600*23) {
                getToken(responseListener);
             }else{

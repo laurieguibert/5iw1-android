@@ -8,6 +8,10 @@ import java.util.Map;
 
 import apackage.thetvdb.entity.Actor;
 import apackage.thetvdb.entity.ActorList;
+import apackage.thetvdb.entity.Episode;
+import apackage.thetvdb.entity.EpisodeList;
+import apackage.thetvdb.entity.Season;
+import apackage.thetvdb.entity.SeasonList;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.SerieDetails;
 import apackage.thetvdb.entity.SerieDetailsList;
@@ -22,7 +26,6 @@ import retrofit2.Response;
  * Created by gianniazizi on 16/12/2017.
  */
 
-// TODO gérer le onFailure -> No internet connection
 
 public class SerieService implements ISerieService {
 
@@ -39,7 +42,6 @@ public class SerieService implements ISerieService {
 
     @Override
     public void list(Map<String, String> map, String search, final ResponseListener<List<Serie>> responseListener) {
-        // TODO ici choisir entre API ou local, si API ne pas oublier d'enregistrer en local
 
         getSerieService().getSerie(map, search).enqueue(new Callback<SerieList>() {
             @Override
@@ -61,7 +63,6 @@ public class SerieService implements ISerieService {
 
     @Override
     public void getActors(Map<String, String> map, int id, final ResponseListener<List<Actor>> responseListener) {
-        // TODO ici choisir entre API ou local, si API ne pas oublier d'enregistrer en local
 
         getSerieService().getActors(map, id).enqueue(new Callback<ActorList>() {
             @Override
@@ -79,7 +80,6 @@ public class SerieService implements ISerieService {
 
     @Override
     public void get(Map<String, String> map, int id, final ResponseListener<SerieDetails> responseListener) {
-        // TODO ici choisir entre API ou local, si API ne pas oublier d'enregistrer en local
 
         getSerieService().getOne(map, id).enqueue(new Callback<SerieDetailsList>() {
             @Override
@@ -90,6 +90,39 @@ public class SerieService implements ISerieService {
 
             @Override
             public void onFailure(Call<SerieDetailsList> call, Throwable t) {
+            }
+        });
+    }
+
+    @Override
+    public void getSeasons(Map<String, String> token, int id, final ResponseListener<Season> responseListener) {
+
+        getSerieService().getSeasons(token, id).enqueue(new Callback<SeasonList>() {
+            @Override
+            public void onResponse(Call<SeasonList> call, Response<SeasonList> response) {
+                Season seasons = response.body().getSeason();
+                responseListener.onSuccess(new ServiceResponse<>(seasons));
+            }
+
+            @Override
+            public void onFailure(Call<SeasonList> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void getEpisodes(Map<String, String> token, int id, final ResponseListener<List<Episode>> responseListener) {
+        getSerieService().getEpisodes(token, id).enqueue(new Callback<EpisodeList>() {
+            @Override
+            public void onResponse(Call<EpisodeList> call, Response<EpisodeList> response) {
+                List<Episode> episodes = response.body().getEpisodeList();
+                responseListener.onSuccess(new ServiceResponse<>(episodes));
+            }
+
+            @Override
+            public void onFailure(Call<EpisodeList> call, Throwable t) {
+
             }
         });
     }

@@ -15,7 +15,6 @@ import retrofit2.Response;
  * Created by gianniazizi on 23/12/2017.
  */
 
-// TODO gérer le onFailure -> No internet connection
 
 public class LoginService implements ILoginService {
 

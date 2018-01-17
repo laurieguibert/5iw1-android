@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SerieActivity" />
-        <activity android:name=".FavoriteActivity"></activity>
+        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".EpisodeActivity"></activity>
     </application>
 
 </manifest>

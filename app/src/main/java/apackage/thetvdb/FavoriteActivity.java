@@ -66,7 +66,6 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
 
         noResult = (LinearLayout) findViewById(R.id.no_result);
-        cancel = (Button) findViewById(R.id.cancel);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         serieListAdapter = new SerieListAdapter(serieList, this, new IRecyclerViewClickListener() {
             @Override
@@ -81,13 +80,6 @@ public class FavoriteActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(serieListAdapter);
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(FavoriteActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
-        });
 
         /* Change drawables color */
 

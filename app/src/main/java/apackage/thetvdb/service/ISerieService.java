@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import apackage.thetvdb.entity.Actor;
+import apackage.thetvdb.entity.Episode;
+import apackage.thetvdb.entity.Season;
 import apackage.thetvdb.entity.Serie;
 import apackage.thetvdb.entity.SerieDetails;
 import apackage.thetvdb.entity.ServiceResponse;
@@ -16,4 +18,6 @@ public interface ISerieService {
     void list(Map<String, String> token, String search, ResponseListener<List<Serie>> responseListener);
     void getActors(Map<String, String> token, int id, ResponseListener<List<Actor>> responseListener);
     void get(Map<String, String> token, int id, ResponseListener<SerieDetails> responseListener);
+    void getSeasons(Map<String, String> token, int id, ResponseListener<Season> responseListener);
+    void getEpisodes(Map<String, String> token, int id, ResponseListener<List<Episode>> responseListener);
 }
